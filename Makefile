@@ -29,4 +29,4 @@ build:
 	./build.sh
 
 render-start:
-	uv run gunicorn hexlet-code.wsgi:application
+	uv run gunicorn hexlet_code.wsgi:application
