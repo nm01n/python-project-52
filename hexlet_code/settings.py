@@ -139,3 +139,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
+
+# Messages
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
+# Login URL
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
