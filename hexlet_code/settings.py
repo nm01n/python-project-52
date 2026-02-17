@@ -36,13 +36,14 @@ if not any('.onrender.com' in host for host in ALLOWED_HOSTS):
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'django_bootstrap5',
+    'django_filters',  # добавьте эту строку
     'task_manager',
 ]
 
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
 
 ROOT_URLCONF = "hexlet_code.urls"
@@ -155,3 +157,14 @@ MESSAGE_TAGS = {
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+# Rollbar configuration
+ROLLBAR_ACCESS_TOKEN = os.getenv('ROLLBAR_ACCESS_TOKEN')
+
+if ROLLBAR_ACCESS_TOKEN:
+    ROLLBAR = {
+        'access_token': ROLLBAR_ACCESS_TOKEN,
+        'environment': 'development' if DEBUG else 'production',
+        'code_version': '1.0',
+        'root': BASE_DIR,
+    }

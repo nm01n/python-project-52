@@ -1,15 +1,17 @@
 [project]
-name = "python-project-52"
+name = "hexlet-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "Task Manager"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "dj-database-url>=3.1.0",
-    "django>=5.2.10",
-    "django-bootstrap5>=26.1",
-    "gunicorn>=25.0.1",
-    "psycopg2-binary>=2.9.11",
-    "python-dotenv>=1.2.1",
-    "whitenoise>=6.11.0",
+    "django>=5.2",
+    "gunicorn>=23.0.0",
+    "python-dotenv>=1.0.1",
+    "dj-database-url>=2.2.0",
+    "psycopg2-binary>=2.9.10",
+    "whitenoise>=6.8.2",
+    "django-bootstrap5>=24.3",
+    "django-filter>=24.3",
+    "rollbar>=1.0.0",
 ]

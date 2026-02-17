@@ -1,10 +1,39 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load django_bootstrap5 %}
 
 {% block title %}{% trans "Tasks" %}{% endblock %}
 
 {% block content %}
 <h1>{% trans "Tasks" %}</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{% trans "Filter" %}</h5>
+        <form method="get">
+            <div class="row">
+                <div class="col-md-3">
+                    {% bootstrap_field filter.form.status show_label=True %}
+                </div>
+                <div class="col-md-3">
+                    {% bootstrap_field filter.form.executor show_label=True %}
+                </div>
+                <div class="col-md-3">
+                    {% bootstrap_field filter.form.labels show_label=True %}
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <div class="form-check">
+                        {{ filter.form.self_tasks }}
+                        <label class="form-check-label" for="{{ filter.form.self_tasks.id_for_label }}">
+                            {% trans "Only my tasks" %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">{% trans "Show" %}</button>
+        </form>
+    </div>
+</div>
 
 <a href="{% url 'task_create' %}" class="btn btn-primary mb-3">{% trans "Create task" %}</a>
 
@@ -22,7 +51,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for task in tasks %}
+        {% for task in filter.qs %}
         <tr>
             <td>{{ task.id }}</td>
             <td>

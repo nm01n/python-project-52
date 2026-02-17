@@ -208,3 +208,12 @@ msgstr "Невозможно удалить метку, потому что он
 
 msgid "No labels yet"
 msgstr "Пока нет меток"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Only my tasks"
+msgstr "Только свои задачи"
+
+msgid "Show"
+msgstr "Показать"

@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
+from task_manager.models import Status, Task, Label
 
 
 class UserTestCase(TestCase):
@@ -18,52 +19,50 @@ class UserTestCase(TestCase):
         self.assertContains(response, self.user1.username)
         self.assertContains(response, self.user2.username)
     
-def test_user_create(self):
-    """Тест создания пользователя"""
-    response = self.client.get(reverse('user_create'))
-    self.assertEqual(response.status_code, 200)
+    def test_user_create(self):
+        """Тест создания пользователя"""
+        response = self.client.get(reverse('user_create'))
+        self.assertEqual(response.status_code, 200)
+        
+        users_count = User.objects.count()
+        response = self.client.post(reverse('user_create'), {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'username': 'testuser',
+            'password1': 'testpass123!@#',
+            'password2': 'testpass123!@#',
+        })
+        
+        if response.status_code != 302:
+            print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(User.objects.count(), users_count + 1)
+        self.assertTrue(User.objects.filter(username='testuser').exists())
     
-    users_count = User.objects.count()
-    response = self.client.post(reverse('user_create'), {
-        'first_name': 'Test',
-        'last_name': 'User',
-        'username': 'testuser',
-        'password1': 'testpass123!@#',
-        'password2': 'testpass123!@#',
-    })
+    def test_user_update_self(self):
+        """Тест обновления своего профиля"""
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('user_update', args=[self.user1.pk]))
+        self.assertEqual(response.status_code, 200)
+        
+        old_username = self.user1.username
+        
+        response = self.client.post(reverse('user_update', args=[self.user1.pk]), {
+            'first_name': 'Updated',
+            'last_name': 'Name',
+            'username': old_username,
+            'password1': 'newpass123!@#',
+            'password2': 'newpass123!@#',
+        })
+        
+        if response.status_code != 302:
+            print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
+        
+        self.assertEqual(response.status_code, 302)
+        self.user1.refresh_from_db()
+        self.assertEqual(self.user1.first_name, 'Updated')
     
-    # Если форма невалидна, выводим ошибки
-    if response.status_code != 302:
-        print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
-    
-    self.assertEqual(response.status_code, 302)
-    self.assertEqual(User.objects.count(), users_count + 1)
-    self.assertTrue(User.objects.filter(username='testuser').exists())
-    
-def test_user_update_self(self):
-    """Тест обновления своего профиля"""
-    self.client.force_login(self.user1)
-    response = self.client.get(reverse('user_update', args=[self.user1.pk]))
-    self.assertEqual(response.status_code, 200)
-    
-    # Получаем текущие данные пользователя
-    old_username = self.user1.username
-    
-    response = self.client.post(reverse('user_update', args=[self.user1.pk]), {
-        'first_name': 'Updated',
-        'last_name': 'Name',
-        'username': old_username,  # Имя пользователя должно остаться
-        'password1': 'newpass123!@#',
-        'password2': 'newpass123!@#',
-    })
-    
-    # Если форма невалидна, выводим ошибки для отладки
-    if response.status_code != 302:
-        print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
-    
-    self.assertEqual(response.status_code, 302)
-    self.user1.refresh_from_db()
-    self.assertEqual(self.user1.first_name, 'Updated')
     def test_user_update_another_user(self):
         """Тест попытки обновления чужого профиля"""
         self.client.force_login(self.user1)
@@ -102,8 +101,6 @@ def test_user_update_self(self):
         self.client.force_login(self.user1)
         response = self.client.post(reverse('logout'))
         self.assertEqual(response.status_code, 302)
-
-from task_manager.models import Status
 
 
 class StatusTestCase(TestCase):
@@ -160,11 +157,9 @@ class StatusTestCase(TestCase):
         self.assertEqual(Status.objects.count(), statuses_count - 1)
         self.assertFalse(Status.objects.filter(pk=self.status1.pk).exists())
 
-from task_manager.models import Task
-
 
 class TaskTestCase(TestCase):
-    fixtures = ['users.json', 'statuses.json', 'tasks.json']
+    fixtures = ['users.json', 'statuses.json', 'labels.json', 'tasks.json']
 
     def setUp(self):
         self.client = Client()
@@ -248,7 +243,56 @@ class TaskTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.task1.name)
 
-from task_manager.models import Label
+    def test_task_filter_by_status(self):
+        """Тест фильтрации задач по статусу"""
+        self.client.force_login(self.user1)
+        status = Status.objects.first()
+        
+        response = self.client.get(
+            reverse('tasks_list'),
+            {'status': status.pk}
+        )
+        self.assertEqual(response.status_code, 200)
+        for task in response.context['filter'].qs:
+            self.assertEqual(task.status, status)
+
+    def test_task_filter_by_executor(self):
+        """Тест фильтрации задач по исполнителю"""
+        self.client.force_login(self.user1)
+        
+        response = self.client.get(
+            reverse('tasks_list'),
+            {'executor': self.user2.pk}
+        )
+        self.assertEqual(response.status_code, 200)
+        for task in response.context['filter'].qs:
+            if task.executor:
+                self.assertEqual(task.executor, self.user2)
+
+    def test_task_filter_by_label(self):
+        """Тест фильтрации задач по метке"""
+        self.client.force_login(self.user1)
+        label = Label.objects.first()
+        
+        response = self.client.get(
+            reverse('tasks_list'),
+            {'labels': label.pk}  # Изменено с 'label' на 'labels'
+        )
+        self.assertEqual(response.status_code, 200)
+        for task in response.context['filter'].qs:
+            self.assertIn(label, task.labels.all())
+
+    def test_task_filter_self_tasks(self):
+        """Тест фильтрации только своих задач"""
+        self.client.force_login(self.user1)
+        
+        response = self.client.get(
+            reverse('tasks_list'),
+            {'self_tasks': 'on'}
+        )
+        self.assertEqual(response.status_code, 200)
+        for task in response.context['filter'].qs:
+            self.assertEqual(task.author, self.user1)
 
 
 class LabelTestCase(TestCase):
@@ -297,7 +341,6 @@ class LabelTestCase(TestCase):
     def test_label_delete(self):
         """Тест удаления метки"""
         self.client.force_login(self.user1)
-        # Создаём метку без связей
         label = Label.objects.create(name='Метка для удаления')
         labels_count = Label.objects.count()
 
@@ -310,7 +353,6 @@ class LabelTestCase(TestCase):
     def test_label_delete_in_use(self):
         """Тест попытки удаления метки, связанной с задачей"""
         self.client.force_login(self.user1)
-        # Используем метку, которая связана с задачей
         labels_count = Label.objects.count()
 
         response = self.client.post(

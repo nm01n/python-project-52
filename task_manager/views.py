@@ -24,3 +24,11 @@ class LogoutUserView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, _('You are logged out'))
         return super().dispatch(request, *args, **kwargs)
+
+from django.http import HttpResponse
+
+
+def trigger_error(request):
+    """Тестовый view для проверки Rollbar"""
+    division_by_zero = 1 / 0
+    return HttpResponse("This should not appear")
