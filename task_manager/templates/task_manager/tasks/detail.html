@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Task" %}: {{ task.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ task.name }}</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>{% trans "ID" %}</th>
+                    <td>{{ task.id }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Status" %}</th>
+                    <td>{{ task.status }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Author" %}</th>
+                    <td>{{ task.author.get_full_name }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Executor" %}</th>
+                    <td>{{ task.executor.get_full_name|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Description" %}</th>
+                    <td>{{ task.description|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Created at" %}</th>
+                    <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'task_update' task.id %}" class="btn btn-primary">{% trans "Update" %}</a>
+{% if request.user == task.author %}
+    <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">{% trans "Delete" %}</a>
+{% endif %}
+<a href="{% url 'tasks_list' %}" class="btn btn-secondary">{% trans "Back" %}</a>
+{% endblock %}

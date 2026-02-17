@@ -159,3 +159,91 @@ class StatusTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Status.objects.count(), statuses_count - 1)
         self.assertFalse(Status.objects.filter(pk=self.status1.pk).exists())
+
+from task_manager.models import Task
+
+
+class TaskTestCase(TestCase):
+    fixtures = ['users.json', 'statuses.json', 'tasks.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.user1 = User.objects.get(pk=1)
+        self.user2 = User.objects.get(pk=2)
+        self.task1 = Task.objects.get(pk=1)
+
+    def test_tasks_list_not_authenticated(self):
+        """Тест: список задач недоступен без авторизации"""
+        response = self.client.get(reverse('tasks_list'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_tasks_list_authenticated(self):
+        """Тест: список задач доступен авторизованным"""
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('tasks_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.task1.name)
+
+    def test_task_create(self):
+        """Тест создания задачи"""
+        self.client.force_login(self.user1)
+        tasks_count = Task.objects.count()
+        status = Status.objects.first()
+
+        response = self.client.post(reverse('task_create'), {
+            'name': 'Новая задача',
+            'description': 'Описание задачи',
+            'status': status.pk,
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Task.objects.count(), tasks_count + 1)
+        new_task = Task.objects.get(name='Новая задача')
+        self.assertEqual(new_task.author, self.user1)
+
+    def test_task_update(self):
+        """Тест обновления задачи"""
+        self.client.force_login(self.user1)
+        status = Status.objects.first()
+
+        response = self.client.post(
+            reverse('task_update', args=[self.task1.pk]),
+            {
+                'name': 'Обновлённая задача',
+                'description': 'Новое описание',
+                'status': status.pk,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+        self.task1.refresh_from_db()
+        self.assertEqual(self.task1.name, 'Обновлённая задача')
+
+    def test_task_delete_by_author(self):
+        """Тест удаления задачи автором"""
+        self.client.force_login(self.user1)
+        tasks_count = Task.objects.count()
+
+        response = self.client.post(
+            reverse('task_delete', args=[self.task1.pk])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Task.objects.count(), tasks_count - 1)
+
+    def test_task_delete_by_non_author(self):
+        """Тест попытки удаления задачи не автором"""
+        self.client.force_login(self.user2)
+        tasks_count = Task.objects.count()
+
+        response = self.client.post(
+            reverse('task_delete', args=[self.task1.pk])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Task.objects.count(), tasks_count)
+
+    def test_task_detail(self):
+        """Тест просмотра задачи"""
+        self.client.force_login(self.user1)
+        response = self.client.get(
+            reverse('task_detail', args=[self.task1.pk])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.task1.name)
