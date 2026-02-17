@@ -102,3 +102,60 @@ def test_user_update_self(self):
         self.client.force_login(self.user1)
         response = self.client.post(reverse('logout'))
         self.assertEqual(response.status_code, 302)
+
+from task_manager.models import Status
+
+
+class StatusTestCase(TestCase):
+    fixtures = ['users.json', 'statuses.json']
+    
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.get(pk=1)
+        self.status1 = Status.objects.get(pk=1)
+        self.status2 = Status.objects.get(pk=2)
+    
+    def test_statuses_list_not_authenticated(self):
+        """Тест: список статусов недоступен без авторизации"""
+        response = self.client.get(reverse('statuses_list'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('login'))
+    
+    def test_statuses_list_authenticated(self):
+        """Тест: список статусов доступен авторизованным"""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('statuses_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.status1.name)
+    
+    def test_status_create(self):
+        """Тест создания статуса"""
+        self.client.force_login(self.user)
+        statuses_count = Status.objects.count()
+        
+        response = self.client.post(reverse('status_create'), {
+            'name': 'Новый статус',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Status.objects.count(), statuses_count + 1)
+        self.assertTrue(Status.objects.filter(name='Новый статус').exists())
+    
+    def test_status_update(self):
+        """Тест обновления статуса"""
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('status_update', args=[self.status1.pk]), {
+            'name': 'Обновлённый статус',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.status1.refresh_from_db()
+        self.assertEqual(self.status1.name, 'Обновлённый статус')
+    
+    def test_status_delete(self):
+        """Тест удаления статуса"""
+        self.client.force_login(self.user)
+        statuses_count = Status.objects.count()
+        
+        response = self.client.post(reverse('status_delete', args=[self.status1.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Status.objects.count(), statuses_count - 1)
+        self.assertFalse(Status.objects.filter(pk=self.status1.pk).exists())

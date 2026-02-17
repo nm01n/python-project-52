@@ -101,3 +101,45 @@ msgstr "Да, удалить"
 
 msgid "Cancel"
 msgstr "Отмена"
+
+msgid "Statuses"
+msgstr "Статусы"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Created at"
+msgstr "Дата создания"
+
+msgid "Create status"
+msgstr "Создать статус"
+
+msgid "Update status"
+msgstr "Изменение статуса"
+
+msgid "Delete status"
+msgstr "Удаление статуса"
+
+msgid "Status successfully created"
+msgstr "Статус успешно создан"
+
+msgid "Status successfully updated"
+msgstr "Статус успешно изменён"
+
+msgid "Status successfully deleted"
+msgstr "Статус успешно удалён"
+
+msgid "Cannot delete status because it is in use"
+msgstr "Невозможно удалить статус, потому что он используется"
+
+msgid "You are not authorized! Please log in."
+msgstr "Вы не авторизованы! Пожалуйста, выполните вход."
+
+msgid "No statuses yet"
+msgstr "Пока нет статусов"
+
+msgid "Create"
+msgstr "Создать"
