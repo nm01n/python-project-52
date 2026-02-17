@@ -247,3 +247,74 @@ class TaskTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.task1.name)
+
+from task_manager.models import Label
+
+
+class LabelTestCase(TestCase):
+    fixtures = ['users.json', 'statuses.json', 'labels.json', 'tasks.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.user1 = User.objects.get(pk=1)
+        self.label1 = Label.objects.get(pk=1)
+
+    def test_labels_list_not_authenticated(self):
+        """Тест: список меток недоступен без авторизации"""
+        response = self.client.get(reverse('labels_list'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_labels_list_authenticated(self):
+        """Тест: список меток доступен авторизованным"""
+        self.client.force_login(self.user1)
+        response = self.client.get(reverse('labels_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.label1.name)
+
+    def test_label_create(self):
+        """Тест создания метки"""
+        self.client.force_login(self.user1)
+        labels_count = Label.objects.count()
+
+        response = self.client.post(reverse('label_create'), {
+            'name': 'Новая метка',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Label.objects.count(), labels_count + 1)
+
+    def test_label_update(self):
+        """Тест обновления метки"""
+        self.client.force_login(self.user1)
+
+        response = self.client.post(
+            reverse('label_update', args=[self.label1.pk]),
+            {'name': 'Обновлённая метка'}
+        )
+        self.assertEqual(response.status_code, 302)
+        self.label1.refresh_from_db()
+        self.assertEqual(self.label1.name, 'Обновлённая метка')
+
+    def test_label_delete(self):
+        """Тест удаления метки"""
+        self.client.force_login(self.user1)
+        # Создаём метку без связей
+        label = Label.objects.create(name='Метка для удаления')
+        labels_count = Label.objects.count()
+
+        response = self.client.post(
+            reverse('label_delete', args=[label.pk])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Label.objects.count(), labels_count - 1)
+
+    def test_label_delete_in_use(self):
+        """Тест попытки удаления метки, связанной с задачей"""
+        self.client.force_login(self.user1)
+        # Используем метку, которая связана с задачей
+        labels_count = Label.objects.count()
+
+        response = self.client.post(
+            reverse('label_delete', args=[self.label1.pk])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Label.objects.count(), labels_count)

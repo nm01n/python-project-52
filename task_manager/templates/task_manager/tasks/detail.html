@@ -27,6 +27,16 @@
                     <td>{{ task.executor.get_full_name|default:"-" }}</td>
                 </tr>
                 <tr>
+                    <th>{% trans "Labels" %}</th>
+                    <td>
+                        {% for label in task.labels.all %}
+                            <span class="badge bg-info">{{ label.name }}</span>
+                        {% empty %}
+                            -
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
                     <th>{% trans "Description" %}</th>
                     <td>{{ task.description|default:"-" }}</td>
                 </tr>
@@ -41,7 +51,4 @@
 
 <a href="{% url 'task_update' task.id %}" class="btn btn-primary">{% trans "Update" %}</a>
 {% if request.user == task.author %}
-    <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">{% trans "Delete" %}</a>
-{% endif %}
-<a href="{% url 'tasks_list' %}" class="btn btn-secondary">{% trans "Back" %}</a>
-{% endblock %}
+    <a href="{% url 'task_delete' task.id %}" clas

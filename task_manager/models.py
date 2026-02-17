@@ -16,6 +16,19 @@ class Status(models.Model):
         return self.name
 
 
+class Label(models.Model):
+    name = models.CharField(max_length=200, unique=True, verbose_name=_('Name'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created at'))
+
+    class Meta:
+        verbose_name = _('Label')
+        verbose_name_plural = _('Labels')
+        ordering = ['created_at']
+
+    def __str__(self):
+        return self.name
+
+
 class Task(models.Model):
     name = models.CharField(max_length=200, verbose_name=_('Name'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
@@ -37,6 +50,12 @@ class Task(models.Model):
         blank=True,
         related_name='assigned_tasks',
         verbose_name=_('Executor')
+    )
+    labels = models.ManyToManyField(
+        Label,
+        blank=True,
+        related_name='tasks',
+        verbose_name=_('Labels')
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created at'))
 

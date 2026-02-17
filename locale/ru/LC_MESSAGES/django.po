@@ -38,6 +38,9 @@ msgstr "Статусы"
 msgid "Tasks"
 msgstr "Задачи"
 
+msgid "Labels"
+msgstr "Метки"
+
 msgid "Created by"
 msgstr "Создано"
 
@@ -178,3 +181,30 @@ msgstr "Задачу может удалить только её автор"
 
 msgid "No tasks yet"
 msgstr "Пока нет задач"
+
+msgid "Label"
+msgstr "Метка"
+
+msgid "Create label"
+msgstr "Создать метку"
+
+msgid "Update label"
+msgstr "Изменение метки"
+
+msgid "Delete label"
+msgstr "Удаление метки"
+
+msgid "Label successfully created"
+msgstr "Метка успешно создана"
+
+msgid "Label successfully updated"
+msgstr "Метка успешно изменена"
+
+msgid "Label successfully deleted"
+msgstr "Метка успешно удалена"
+
+msgid "Cannot delete label because it is in use"
+msgstr "Невозможно удалить метку, потому что она используется"
+
+msgid "No labels yet"
+msgstr "Пока нет меток"

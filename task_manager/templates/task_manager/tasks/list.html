@@ -16,6 +16,7 @@
             <th>{% trans "Status" %}</th>
             <th>{% trans "Author" %}</th>
             <th>{% trans "Executor" %}</th>
+            <th>{% trans "Labels" %}</th>
             <th>{% trans "Created at" %}</th>
             <th></th>
         </tr>
@@ -30,6 +31,11 @@
             <td>{{ task.status }}</td>
             <td>{{ task.author.get_full_name }}</td>
             <td>{{ task.executor.get_full_name|default:"-" }}</td>
+            <td>
+                {% for label in task.labels.all %}
+                    <span class="badge bg-info">{{ label.name }}</span>
+                {% endfor %}
+            </td>
             <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
             <td>
                 <a href="{% url 'task_update' task.id %}">{% trans "Update" %}</a>
@@ -40,7 +46,7 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="7">{% trans "No tasks yet" %}</td>
+            <td colspan="8">{% trans "No tasks yet" %}</td>
         </tr>
         {% endfor %}
     </tbody>
