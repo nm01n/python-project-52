@@ -1,67 +1,54 @@
 # Makefile для проекта Django + Hexlet/uv
 
-# Устанавливаем зависимости в виртуальное окружение
 .PHONY: install
 install:
 	uv sync --system
 
-# Применяем миграции базы данных
 .PHONY: migrate
 migrate:
-	uv run python code/manage.py migrate
+	uv run python manage.py migrate
 
-# Создаём статические файлы
 .PHONY: collectstatic
 collectstatic:
-	uv run python code/manage.py collectstatic --no-input
+	uv run python manage.py collectstatic --no-input
 
-# Запускаем Django сервер
 .PHONY: run
 run:
-	uv run python code/manage.py runserver
+	uv run python manage.py runserver
 
-# Запускаем Django shell
 .PHONY: shell
 shell:
-	uv run python code/manage.py shell
+	uv run python manage.py shell
 
-# Создаём миграции
 .PHONY: makemigrations
 makemigrations:
-	uv run python code/manage.py makemigrations
+	uv run python manage.py makemigrations
 
-# Создаём суперпользователя
 .PHONY: createsuperuser
 createsuperuser:
-	uv run python code/manage.py createsuperuser
+	uv run python manage.py createsuperuser
 
-# Проверяем код с помощью ruff
 .PHONY: lint
 lint:
-	uv run ruff check code
+	uv run ruff check .
 
-# Запускаем тесты
 .PHONY: test
 test:
-	uv run python code/manage.py test
+	uv run python manage.py test
 
-# Собираем проект (если есть build.sh)
 .PHONY: build
 build:
 	./build.sh
 
-# Запуск через Gunicorn
 .PHONY: render-start
 render-start:
 	uv run gunicorn hexlet_code.wsgi:application
 
-# Полная настройка окружения + миграции
 .PHONY: setup
 setup:
 	$(MAKE) install
-	uv run python code/manage.py migrate
+	$(MAKE) migrate
 
-# Запуск сервера на всех интерфейсах
 .PHONY: start-server
 start-server:
-	uv run python code/manage.py runserver 0.0.0.0:3000
+	uv run python manage.py runserver 0.0.0.0:3000
