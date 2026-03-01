@@ -1,5 +1,3 @@
-# Makefile для проекта Django + Hexlet/uv
-
 .PHONY: install
 install:
 	uv sync --system
@@ -30,7 +28,7 @@ createsuperuser:
 
 .PHONY: lint
 lint:
-	uv run ruff check .
+	uv run ruff check code
 
 .PHONY: test
 test:
@@ -46,8 +44,8 @@ render-start:
 
 .PHONY: setup
 setup:
-	$(MAKE) install
-	$(MAKE) migrate
+	uv sync
+	uv run python manage.py migrate
 
 .PHONY: start-server
 start-server:
