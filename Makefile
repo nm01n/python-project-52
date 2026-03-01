@@ -1,6 +1,6 @@
 .PHONY: install
 install:
-	uv sync
+	cd code && uv sync --system
 
 .PHONY: migrate
 migrate:
