@@ -45,7 +45,7 @@ lint:
 
 .PHONY: render-start
 render-start:
-	cd code && uv run /venv/bin/gunicorn hexlet_code.wsgi:application
+	cd code && uv run python /venv/bin/gunicorn hexlet_code.wsgi:application
 
 .PHONY: build
 build:
