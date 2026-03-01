@@ -1,3 +1,5 @@
+# Makefile для проекта Hexlet
+
 .PHONY: install
 install:
 	cd code && uv sync --system
@@ -5,6 +7,10 @@ install:
 .PHONY: migrate
 migrate:
 	cd code && uv run python manage.py migrate
+
+.PHONY: makemigrations
+makemigrations:
+	cd code && uv run python manage.py makemigrations
 
 .PHONY: collectstatic
 collectstatic:
@@ -17,10 +23,6 @@ run:
 .PHONY: shell
 shell:
 	cd code && uv run python manage.py shell
-
-.PHONY: makemigrations
-makemigrations:
-	cd code && uv run python manage.py makemigrations
 
 .PHONY: createsuperuser
 createsuperuser:
