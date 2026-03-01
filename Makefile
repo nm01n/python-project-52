@@ -1,4 +1,4 @@
-# Makefile для проекта Hexlet
+# Makefile для проекта Django с uv
 
 .PHONY: install
 install:
@@ -6,35 +6,35 @@ install:
 
 .PHONY: migrate
 migrate:
-	cd code && uv run python manage.py migrate
+	uv run python code/manage.py migrate
 
 .PHONY: makemigrations
 makemigrations:
-	cd code && uv run python manage.py makemigrations
+	uv run python code/manage.py makemigrations
 
 .PHONY: collectstatic
 collectstatic:
-	cd code && uv run python manage.py collectstatic --no-input
+	uv run python code/manage.py collectstatic --no-input
 
 .PHONY: run
 run:
-	cd code && uv run python manage.py runserver
+	uv run python code/manage.py runserver
 
 .PHONY: shell
 shell:
-	cd code && uv run python manage.py shell
+	uv run python code/manage.py shell
 
 .PHONY: createsuperuser
 createsuperuser:
-	cd code && uv run python manage.py createsuperuser
+	uv run python code/manage.py createsuperuser
 
 .PHONY: lint
 lint:
-	cd code && uv run ruff check .
+	uv run ruff check .
 
 .PHONY: test
 test:
-	cd code && uv run python manage.py test
+	uv run python code/manage.py test
 
 .PHONY: build
 build:
@@ -42,11 +42,11 @@ build:
 
 .PHONY: render-start
 render-start:
-	cd code && uv run gunicorn hexlet_code.wsgi:application
+	uv run gunicorn hexlet_code.wsgi:application
 
 .PHONY: setup
 setup: install migrate
 
 .PHONY: start-server
 start-server:
-	cd code && uv run python manage.py runserver 0.0.0.0:3000
+	uv run python code/manage.py runserver 0.0.0.0:3000
