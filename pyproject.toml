@@ -15,3 +15,27 @@ dependencies = [
     "django-filter>=24.3",
     "rollbar>=1.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.1",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["hexlet_code", "task_manager"]
+
+[tool.ruff]
+line-length = 120
+exclude = [".git", "migrations"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+]
