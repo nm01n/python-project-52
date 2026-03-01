@@ -1,8 +1,6 @@
-# Makefile для проекта Django с uv
-
 .PHONY: install
 install:
-	cd code && uv sync --system
+	uv sync --system -C code
 
 .PHONY: migrate
 migrate:
@@ -30,7 +28,7 @@ createsuperuser:
 
 .PHONY: lint
 lint:
-	uv run ruff check .
+	uv run ruff check code
 
 .PHONY: test
 test:
