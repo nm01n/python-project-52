@@ -1,14 +1,12 @@
+# Makefile для проекта Django + Hexlet/uv
+
 .PHONY: install
 install:
-	uv sync --system -C code
+	uv sync --system
 
 .PHONY: migrate
 migrate:
 	uv run python code/manage.py migrate
-
-.PHONY: makemigrations
-makemigrations:
-	uv run python code/manage.py makemigrations
 
 .PHONY: collectstatic
 collectstatic:
@@ -21,6 +19,10 @@ run:
 .PHONY: shell
 shell:
 	uv run python code/manage.py shell
+
+.PHONY: makemigrations
+makemigrations:
+	uv run python code/manage.py makemigrations
 
 .PHONY: createsuperuser
 createsuperuser:
