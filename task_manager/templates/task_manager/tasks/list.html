@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load django_bootstrap5 %}
 
 {% block title %}{% trans "Tasks" %}{% endblock %}
 
@@ -13,13 +12,16 @@
         <form method="get">
             <div class="row">
                 <div class="col-md-3">
-                    {% bootstrap_field filter.form.status show_label=True %}
+                    <label for="{{ filter.form.status.id_for_label }}" class="form-label">{{ filter.form.status.label }}</label>
+                    {{ filter.form.status }}
                 </div>
                 <div class="col-md-3">
-                    {% bootstrap_field filter.form.executor show_label=True %}
+                    <label for="{{ filter.form.executor.id_for_label }}" class="form-label">{{ filter.form.executor.label }}</label>
+                    {{ filter.form.executor }}
                 </div>
                 <div class="col-md-3">
-                    {% bootstrap_field filter.form.labels show_label=True %}
+                    <label for="{{ filter.form.labels.id_for_label }}" class="form-label">{{ filter.form.labels.label }}</label>
+                    {{ filter.form.labels }}
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <div class="form-check">
@@ -69,7 +71,7 @@
             <td>
                 <a href="{% url 'task_update' task.id %}">{% trans "Update" %}</a>
                 {% if request.user == task.author %}
-                    <a href="{% url 'task_delete' task.id %}">{% trans "Delete" %}</a>
+                <a href="{% url 'task_delete' task.id %}">{% trans "Delete" %}</a>
                 {% endif %}
             </td>
         </tr>

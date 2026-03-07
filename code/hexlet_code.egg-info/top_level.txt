@@ -1,2 +1,0 @@
-hexlet_code
-task_manager

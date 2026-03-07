@@ -1,52 +1,50 @@
 .PHONY: install
 install:
-	uv sync --system
-
-.PHONY: setup
-setup:
-	cd code && uv sync
-	cd code && uv run python manage.py migrate
+	uv sync
 
 .PHONY: migrate
 migrate:
-	cd code && uv run python manage.py migrate
-
-.PHONY: makemigrations
-makemigrations:
-	cd code && uv run python.manage.py makemigrations
+	uv run python manage.py migrate
 
 .PHONY: collectstatic
 collectstatic:
-	cd code && uv run python manage.py collectstatic --no-input
+	uv run python manage.py collectstatic --no-input
 
 .PHONY: run
 run:
-	cd code && uv run python manage.py runserver
-
-.PHONY: start-server
-start-server:
-	cd code && uv run python manage.py runserver 0.0.0.0:3000
+	uv run python manage.py runserver
 
 .PHONY: shell
 shell:
-	cd code && uv run python manage.py shell
+	uv run python manage.py shell
+
+.PHONY: makemigrations
+makemigrations:
+	uv run python manage.py makemigrations
 
 .PHONY: createsuperuser
 createsuperuser:
-	cd code && uv run python manage.py createsuperuser
-
-.PHONY: test
-test:
-	cd code && uv run python manage.py test
+	uv run python manage.py createsuperuser
 
 .PHONY: lint
 lint:
-	uv lint
+	uv run ruff check .
 
-.PHONY: render-start
-render-start:
-	cd code && uv run python /venv/bin/gunicorn hexlet_code.wsgi:application
+.PHONY: test
+test:
+	uv run python manage.py test
 
 .PHONY: build
 build:
 	./build.sh
+
+.PHONY: render-start
+render-start:
+	uv run gunicorn task_manager.wsgi:application
+
+.PHONY: setup
+setup: install migrate
+
+.PHONY: start-server
+start-server:
+	uv run python manage.py runserver 0.0.0.0:3000
