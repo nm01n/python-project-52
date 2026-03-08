@@ -26,17 +26,15 @@ class UserListView(ListView):
     ordering = ['id']
 
 
-class UserCreateView(SuccessMessageMixin, CreateView):
+class UserCreateView(CreateView):
     model = User
     form_class = UserForm
     template_name = 'task_manager/users/create.html'
     success_url = reverse_lazy('login')
-    success_message = _('User successfully registered')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, self.success_message)
-        return response
+        messages.success(self.request, _('User successfully registered'))
+        return super().form_valid(form)
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
@@ -59,7 +57,6 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
     template_name = 'task_manager/users/delete.html'
     success_url = reverse_lazy('users_list')
-    success_message = _('User successfully deleted')
     login_url = reverse_lazy('login')
     
     def test_func(self):
@@ -70,5 +67,5 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect('users_list')
     
     def form_valid(self, form):
-        messages.success(self.request, self.success_message)
+        messages.success(self.request, _('User successfully deleted'))
         return super().form_valid(form)

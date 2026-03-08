@@ -27,7 +27,7 @@ msgid "Login"
 msgstr "Вход"
 
 msgid "Sign up"
-msgstr "Зарегистрироваться"
+msgstr "Регистрация"
 
 msgid "Logout"
 msgstr "Выйти"
