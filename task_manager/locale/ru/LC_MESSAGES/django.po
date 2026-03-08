@@ -24,7 +24,7 @@ msgid "Users"
 msgstr "Пользователи"
 
 msgid "Login"
-msgstr "Войти"
+msgstr "Вход"
 
 msgid "Sign up"
 msgstr "Зарегистрироваться"
