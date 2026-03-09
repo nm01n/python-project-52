@@ -11,31 +11,27 @@ from django import forms
 
 
 class UserForm(UserCreationForm):
-    full_name = forms.CharField(
-        max_length=255,
+    first_name = forms.CharField(
+        max_length=150,
         required=False,
-        label=_('Full name')
+        label=_('First name')
+    )
+
+    last_name = forms.CharField(
+        max_length=150,
+        required=False,
+        label=_('Last name')
     )
 
     class Meta:
         model = User
-        fields = ('full_name', 'username', 'password1', 'password2')
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-
-        full_name = self.cleaned_data.get('full_name', '').strip().split()
-
-        if len(full_name) > 0:
-            user.first_name = full_name[0]
-
-        if len(full_name) > 1:
-            user.last_name = ' '.join(full_name[1:])
-
-        if commit:
-            user.save()
-
-        return user
+        fields = (
+            'first_name',
+            'last_name',
+            'username',
+            'password1',
+            'password2'
+        )
 
 
 class UserListView(ListView):
