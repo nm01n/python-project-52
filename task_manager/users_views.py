@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django import forms
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -9,7 +10,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 
-class UserForm(UserCreationForm):
+class UserCreateForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -22,6 +23,17 @@ class UserForm(UserCreationForm):
         )
 
 
+class UserUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+        )
+
+
 class UserListView(ListView):
     model = User
     template_name = "task_manager/users/list.html"
@@ -31,7 +43,7 @@ class UserListView(ListView):
 
 class UserCreateView(SuccessMessageMixin, CreateView):
     model = User
-    form_class = UserForm
+    form_class = UserCreateForm
     template_name = "task_manager/users/create.html"
     success_url = reverse_lazy("login")
     success_message = _("User successfully registered")
@@ -39,7 +51,7 @@ class UserCreateView(SuccessMessageMixin, CreateView):
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = User
-    form_class = UserForm
+    form_class = UserUpdateForm
     template_name = "task_manager/users/update.html"
     success_url = reverse_lazy("users_list")
     success_message = _("User successfully updated")
