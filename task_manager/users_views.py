@@ -11,6 +11,8 @@ from django.shortcuts import redirect
 
 
 class UserCreateForm(UserCreationForm):
+    first_name = forms.CharField(max_length=150, required=True, label=_('First name'))
+    last_name = forms.CharField(max_length=150, required=True, label=_('Last name'))
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -24,6 +26,8 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150, required=True, label=_('First name'))
+    last_name = forms.CharField(max_length=150, required=True, label=_('Last name'))
 
     class Meta:
         model = User
