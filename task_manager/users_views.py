@@ -7,55 +7,43 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.shortcuts import redirect
-from django import forms
 
 
 class UserForm(UserCreationForm):
-    first_name = forms.CharField(
-        max_length=150,
-        required=False,
-        label=_('First name')
-    )
 
-    last_name = forms.CharField(
-        max_length=150,
-        required=False,
-        label=_('Last name')
-    )
-
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = User
         fields = (
-            'first_name',
-            'last_name',
-            'username',
-            'password1',
-            'password2'
+            "first_name",
+            "last_name",
+            "username",
+            "password1",
+            "password2",
         )
 
 
 class UserListView(ListView):
     model = User
-    template_name = 'task_manager/users/list.html'
-    context_object_name = 'users'
-    ordering = ['id']
+    template_name = "task_manager/users/list.html"
+    context_object_name = "users"
+    ordering = ["id"]
 
 
 class UserCreateView(SuccessMessageMixin, CreateView):
     model = User
     form_class = UserForm
-    template_name = 'task_manager/users/create.html'
-    success_url = reverse_lazy('login')
-    success_message = _('User successfully registered')
+    template_name = "task_manager/users/create.html"
+    success_url = reverse_lazy("login")
+    success_message = _("User successfully registered")
 
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = User
     form_class = UserForm
-    template_name = 'task_manager/users/update.html'
-    success_url = reverse_lazy('users_list')
-    success_message = _('User successfully updated')
-    login_url = reverse_lazy('login')
+    template_name = "task_manager/users/update.html"
+    success_url = reverse_lazy("users_list")
+    success_message = _("User successfully updated")
+    login_url = reverse_lazy("login")
 
     def test_func(self):
         return self.get_object() == self.request.user
@@ -63,16 +51,16 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
     def handle_no_permission(self):
         messages.error(
             self.request,
-            _('You do not have permission to modify another user')
+            _("You do not have permission to modify another user"),
         )
-        return redirect('users_list')
+        return redirect("users_list")
 
 
 class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
-    template_name = 'task_manager/users/delete.html'
-    success_url = reverse_lazy('users_list')
-    login_url = reverse_lazy('login')
+    template_name = "task_manager/users/delete.html"
+    success_url = reverse_lazy("users_list")
+    login_url = reverse_lazy("login")
 
     def test_func(self):
         return self.get_object() == self.request.user
@@ -80,10 +68,10 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         messages.error(
             self.request,
-            _('You do not have permission to delete another user')
+            _("You do not have permission to delete another user"),
         )
-        return redirect('users_list')
+        return redirect("users_list")
 
     def form_valid(self, form):
-        messages.success(self.request, _('User successfully deleted'))
+        messages.success(self.request, _("User successfully deleted"))
         return super().form_valid(form)
