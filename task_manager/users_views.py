@@ -33,9 +33,9 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         messages.success(self.request, _('User successfully registered'))
-        return super().form_valid(form)
-
+        return response
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = User
