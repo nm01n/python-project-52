@@ -30,15 +30,14 @@ class UserCreateView(CreateView):
     model = User
     form_class = UserForm
     template_name = 'task_manager/users/create.html'
-    success_url = reverse_lazy('login')
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
+    def get_success_url(self):
         messages.success(self.request, _('User successfully registered'))
-        return response
+        return reverse_lazy('login')
 
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = User
+
     form_class = UserForm
     template_name = 'task_manager/users/update.html'
     success_url = reverse_lazy('users_list')
