@@ -26,6 +26,9 @@ msgstr "Пользователи"
 msgid "Login"
 msgstr "Вход"
 
+msgid "Log in"
+msgstr "Войти"
+
 msgid "Sign up"
 msgstr "Регистрация"
 
