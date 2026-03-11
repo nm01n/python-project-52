@@ -36,7 +36,7 @@ msgid "Register"
 msgstr "Зарегистрировать"
 
 msgid "Logout"
-msgstr "Выйти"
+msgstr "Выход"
 
 msgid "Statuses"
 msgstr "Статусы"
@@ -108,7 +108,7 @@ msgid "User successfully registered"
 msgstr "Пользователь успешно зарегистрирован"
 
 msgid "User successfully updated"
-msgstr "Пользователь успешно изменён"
+msgstr "Пользователь успешно изменен"
 
 msgid "User successfully deleted"
 msgstr "Пользователь успешно удалён"
@@ -141,7 +141,7 @@ msgid "Status successfully created"
 msgstr "Статус успешно создан"
 
 msgid "Status successfully updated"
-msgstr "Статус успешно изменён"
+msgstr "Статус успешно изменен"
 
 msgid "Status successfully deleted"
 msgstr "Статус успешно удалён"
