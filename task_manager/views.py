@@ -3,6 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 
 
 class IndexView(TemplateView):
@@ -14,8 +15,9 @@ class LoginUserView(LoginView):
     next_page = reverse_lazy('index')
     
     def form_valid(self, form):
+        response = super().form_valid(form)
         messages.success(self.request, _('You are logged in'))
-        return super().form_valid(form)
+        return response
 
 
 class LogoutUserView(LogoutView):
@@ -24,8 +26,6 @@ class LogoutUserView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, _('You are logged out'))
         return super().dispatch(request, *args, **kwargs)
-
-from django.http import HttpResponse
 
 
 def trigger_error(request):
