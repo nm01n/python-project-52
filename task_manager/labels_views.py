@@ -56,11 +56,10 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect('login')
 
 
-class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class LabelDeleteView(LoginRequiredMixin, DeleteView):
     model = Label
     template_name = 'task_manager/labels/delete.html'
     success_url = reverse_lazy('labels_list')
-    success_message = _('Label successfully deleted')
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
@@ -70,7 +69,7 @@ class LabelDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     def form_valid(self, form):
         try:
             self.object.delete()
-            messages.success(self.request, self.success_message)
+            messages.success(self.request, _('Label successfully deleted'))
         except ProtectedError:
             messages.error(
                 self.request,

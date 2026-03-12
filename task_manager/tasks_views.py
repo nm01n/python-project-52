@@ -23,6 +23,10 @@ class TaskForm(forms.ModelForm):
             'labels': forms.SelectMultiple(attrs={'class': 'form-select', 'size': '5'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['executor'].label_from_instance = lambda obj: obj.get_full_name()
+
 class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
     template_name = 'task_manager/tasks/list.html'
