@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.db.models import ProtectedError
 from task_manager.models import Label
 from django import forms
 
@@ -67,12 +66,14 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
         return redirect('login')
 
     def form_valid(self, form):
-        try:
-            self.object.delete()
-            messages.success(self.request, _('Label successfully deleted'))
-        except ProtectedError:
+        label = self.get_object()
+        # Проверяем используется ли метка в задачах
+        if label.tasks.exists():
             messages.error(
                 self.request,
                 _('Cannot delete label because it is in use')
             )
-        return redirect(self.success_url)
+            return redirect(self.success_url)
+        
+        messages.success(self.request, _('Label successfully deleted'))
+        return super().form_valid(form)

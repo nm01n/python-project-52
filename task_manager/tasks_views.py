@@ -25,7 +25,9 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Отображать полное имя пользователя в селекте исполнителя
         self.fields['executor'].label_from_instance = lambda obj: obj.get_full_name()
+
 
 class TaskListView(LoginRequiredMixin, FilterView):
     model = Task
@@ -37,6 +39,7 @@ class TaskListView(LoginRequiredMixin, FilterView):
     def handle_no_permission(self):
         messages.error(self.request, _('You are not authorized! Please log in.'))
         return redirect('login')
+
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
@@ -79,11 +82,10 @@ class TaskUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return redirect('login')
 
 
-class TaskDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = 'task_manager/tasks/delete.html'
     success_url = reverse_lazy('tasks_list')
-    success_message = _('Task successfully deleted')
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
@@ -101,5 +103,5 @@ class TaskDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        messages.success(self.request, self.success_message)
+        messages.success(self.request, _('Task successfully deleted'))
         return super().form_valid(form)
