@@ -111,7 +111,7 @@ msgid "User successfully updated"
 msgstr "Пользователь успешно изменен"
 
 msgid "User successfully deleted"
-msgstr "Пользователь успешно удалён"
+msgstr "Пользователь успешно удален"
 
 msgid "Cannot delete user because it is in use"
 msgstr "Невозможно удалить пользователя, потому что он используется"
@@ -144,7 +144,7 @@ msgid "Status successfully updated"
 msgstr "Статус успешно изменен"
 
 msgid "Status successfully deleted"
-msgstr "Статус успешно удалён"
+msgstr "Статус успешно удален"
 
 msgid "Cannot delete status because it is in use"
 msgstr "Невозможно удалить статус, потому что он используется"
