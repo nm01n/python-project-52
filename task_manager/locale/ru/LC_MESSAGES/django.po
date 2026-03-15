@@ -183,7 +183,7 @@ msgid "Task successfully deleted"
 msgstr "Задача успешно удалена"
 
 msgid "A task can only be deleted by its author"
-msgstr "Задачу может удалить только её автор"
+msgstr "Задачу может удалить только ее автор"
 
 msgid "No tasks yet"
 msgstr "Пока нет задач"
