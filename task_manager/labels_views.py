@@ -15,7 +15,9 @@ class LabelForm(forms.ModelForm):
         model = Label
         fields = ['name']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
         }
 
 
@@ -26,7 +28,10 @@ class LabelListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -39,7 +44,10 @@ class LabelCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -52,7 +60,10 @@ class LabelUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -63,12 +74,15 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
     def form_valid(self, form):
         label = self.get_object()
-        # Проверяем используется ли метка в задачах
+
         if label.tasks.exists():
             messages.error(
                 self.request,
@@ -76,5 +90,8 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
             )
             return redirect(self.success_url)
 
-        messages.success(self.request, _('Label successfully deleted'))
+        messages.success(
+            self.request,
+            _('Label successfully deleted')
+        )
         return super().form_valid(form)

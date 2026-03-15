@@ -15,19 +15,43 @@ from task_manager.models import Task
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description', 'status', 'executor', 'labels']
+        fields = [
+            'name',
+            'description',
+            'status',
+            'executor',
+            'labels'
+        ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
-            'executor': forms.Select(attrs={'class': 'form-select'}),
-            'labels': forms.SelectMultiple(attrs={'class': 'form-select', 'size': '5'}),
+            'name': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+            'description': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 5
+                }
+            ),
+            'status': forms.Select(
+                attrs={'class': 'form-select'}
+            ),
+            'executor': forms.Select(
+                attrs={'class': 'form-select'}
+            ),
+            'labels': forms.SelectMultiple(
+                attrs={
+                    'class': 'form-select',
+                    'size': '5'
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Отображать полное имя пользователя в селекте исполнителя
-        self.fields['executor'].label_from_instance = lambda obj: obj.get_full_name()
+
+        self.fields['executor'].label_from_instance = (
+            lambda obj: obj.get_full_name()
+        )
 
 
 class TaskListView(LoginRequiredMixin, FilterView):
@@ -38,7 +62,10 @@ class TaskListView(LoginRequiredMixin, FilterView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -49,7 +76,10 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -62,7 +92,10 @@ class TaskCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
     def form_valid(self, form):
@@ -79,7 +112,10 @@ class TaskUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -90,19 +126,27 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
     def dispatch(self, request, *args, **kwargs):
         task = self.get_object()
+
         if task.author != request.user:
             messages.error(
                 request,
                 _('A task can only be deleted by its author')
             )
             return redirect('tasks_list')
+
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        messages.success(self.request, _('Task successfully deleted'))
+        messages.success(
+            self.request,
+            _('Task successfully deleted')
+        )
         return super().form_valid(form)

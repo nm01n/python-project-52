@@ -16,7 +16,9 @@ class StatusForm(forms.ModelForm):
         model = Status
         fields = ['name']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
         }
 
 
@@ -27,7 +29,10 @@ class StatusListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -40,7 +45,10 @@ class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -53,7 +61,10 @@ class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
 
@@ -65,17 +76,24 @@ class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     login_url = reverse_lazy('login')
 
     def handle_no_permission(self):
-        messages.error(self.request, _('You are not authorized! Please log in.'))
+        messages.error(
+            self.request,
+            _('You are not authorized! Please log in.')
+        )
         return redirect('login')
 
     def form_valid(self, form):
         try:
             self.object.delete()
-            messages.success(self.request, self.success_message)
+            messages.success(
+                self.request,
+                self.success_message
+            )
         except ProtectedError:
             messages.error(
                 self.request,
                 _('Cannot delete status because it is in use')
             )
             return redirect('statuses_list')
+
         return redirect(self.success_url)
