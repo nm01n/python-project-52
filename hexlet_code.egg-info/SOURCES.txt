@@ -27,4 +27,5 @@ task_manager/wsgi.py
 task_manager/migrations/0001_initial.py
 task_manager/migrations/0002_task.py
 task_manager/migrations/0003_label_task_labels.py
+task_manager/migrations/0004_alter_task_name.py
 task_manager/migrations/__init__.py

@@ -1,12 +1,13 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.messages.views import SuccessMessageMixin
+from django import forms
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.contrib import messages
-from django.shortcuts import redirect
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
 from task_manager.models import Label
-from django import forms
 
 
 class LabelForm(forms.ModelForm):
@@ -74,6 +75,6 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
                 _('Cannot delete label because it is in use')
             )
             return redirect(self.success_url)
-        
+
         messages.success(self.request, _('Label successfully deleted'))
         return super().form_valid(form)

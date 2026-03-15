@@ -1,13 +1,14 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from django.contrib.messages.views import SuccessMessageMixin
+from django import forms
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import ProtectedError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.db.models import ProtectedError
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
 from task_manager.models import Status
-from django import forms
 
 
 class StatusForm(forms.ModelForm):
@@ -24,7 +25,7 @@ class StatusListView(LoginRequiredMixin, ListView):
     template_name = 'task_manager/statuses/list.html'
     context_object_name = 'statuses'
     login_url = reverse_lazy('login')
-    
+
     def handle_no_permission(self):
         messages.error(self.request, _('You are not authorized! Please log in.'))
         return redirect('login')
@@ -37,7 +38,7 @@ class StatusCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('statuses_list')
     success_message = _('Status successfully created')
     login_url = reverse_lazy('login')
-    
+
     def handle_no_permission(self):
         messages.error(self.request, _('You are not authorized! Please log in.'))
         return redirect('login')
@@ -50,7 +51,7 @@ class StatusUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy('statuses_list')
     success_message = _('Status successfully updated')
     login_url = reverse_lazy('login')
-    
+
     def handle_no_permission(self):
         messages.error(self.request, _('You are not authorized! Please log in.'))
         return redirect('login')
@@ -62,11 +63,11 @@ class StatusDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('statuses_list')
     success_message = _('Status successfully deleted')
     login_url = reverse_lazy('login')
-    
+
     def handle_no_permission(self):
         messages.error(self.request, _('You are not authorized! Please log in.'))
         return redirect('login')
-    
+
     def form_valid(self, form):
         try:
             self.object.delete()

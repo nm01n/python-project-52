@@ -1,8 +1,9 @@
 import django_filters
 from django import forms
-from django.utils.translation import gettext_lazy as _
-from task_manager.models import Task, Label
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+
+from task_manager.models import Label, Task
 
 
 class TaskFilter(django_filters.FilterSet):
@@ -11,13 +12,13 @@ class TaskFilter(django_filters.FilterSet):
         label=_('Label'),
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    
+
     executor = django_filters.ModelChoiceFilter(
         queryset=User.objects.all(),
         label=_('Executor'),
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    
+
     self_tasks = django_filters.BooleanFilter(
         method='filter_self_tasks',
         label=_('Only my tasks'),
