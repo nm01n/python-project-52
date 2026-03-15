@@ -26,16 +26,24 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         users_count = User.objects.count()
-        response = self.client.post(reverse('user_create'), {
-            'first_name': 'Test',
-            'last_name': 'User',
-            'username': 'testuser',
-            'password1': 'testpass123!@#',
-            'password2': 'testpass123!@#',
-        })
+        response = self.client.post(
+            reverse('user_create'),
+            {
+                'first_name': 'Test',
+                'last_name': 'User',
+                'username': 'testuser',
+                'password1': 'testpass123!@#',
+                'password2': 'testpass123!@#',
+            }
+        )
 
         if response.status_code != 302:
-            print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
+            print(
+                "Form errors:",
+                response.context['form'].errors
+                if 'form' in response.context
+                else 'No form'
+            )
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(User.objects.count(), users_count + 1)
@@ -48,17 +56,24 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         old_username = self.user1.username
-
-        response = self.client.post(reverse('user_update', args=[self.user1.pk]), {
-            'first_name': 'Updated',
-            'last_name': 'Name',
-            'username': old_username,
-            'password1': 'newpass123!@#',
-            'password2': 'newpass123!@#',
-        })
+        response = self.client.post(
+            reverse('user_update', args=[self.user1.pk]),
+            {
+                'first_name': 'Updated',
+                'last_name': 'Name',
+                'username': old_username,
+                'password1': 'newpass123!@#',
+                'password2': 'newpass123!@#',
+            }
+        )
 
         if response.status_code != 302:
-            print("Form errors:", response.context['form'].errors if 'form' in response.context else 'No form')
+            print(
+                "Form errors:",
+                response.context['form'].errors
+                if 'form' in response.context
+                else 'No form'
+            )
 
         self.assertEqual(response.status_code, 302)
         self.user1.refresh_from_db()
@@ -90,10 +105,13 @@ class UserTestCase(TestCase):
 
     def test_login(self):
         """Тест входа"""
-        response = self.client.post(reverse('login'), {
-            'username': self.user1.username,
-            'password': 'password123',
-        })
+        response = self.client.post(
+            reverse('login'),
+            {
+                'username': self.user1.username,
+                'password': 'password123',
+            }
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
 
@@ -131,9 +149,10 @@ class StatusTestCase(TestCase):
         self.client.force_login(self.user)
         statuses_count = Status.objects.count()
 
-        response = self.client.post(reverse('status_create'), {
-            'name': 'Новый статус',
-        })
+        response = self.client.post(
+            reverse('status_create'),
+            {'name': 'Новый статус'}
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Status.objects.count(), statuses_count + 1)
         self.assertTrue(Status.objects.filter(name='Новый статус').exists())
@@ -141,9 +160,10 @@ class StatusTestCase(TestCase):
     def test_status_update(self):
         """Тест обновления статуса"""
         self.client.force_login(self.user)
-        response = self.client.post(reverse('status_update', args=[self.status1.pk]), {
-            'name': 'Обновлённый статус',
-        })
+        response = self.client.post(
+            reverse('status_update', args=[self.status1.pk]),
+            {'name': 'Обновлённый статус'}
+        )
         self.assertEqual(response.status_code, 302)
         self.status1.refresh_from_db()
         self.assertEqual(self.status1.name, 'Обновлённый статус')
@@ -153,7 +173,9 @@ class StatusTestCase(TestCase):
         self.client.force_login(self.user)
         statuses_count = Status.objects.count()
 
-        response = self.client.post(reverse('status_delete', args=[self.status1.pk]))
+        response = self.client.post(
+            reverse('status_delete', args=[self.status1.pk])
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Status.objects.count(), statuses_count - 1)
         self.assertFalse(Status.objects.filter(pk=self.status1.pk).exists())
@@ -186,11 +208,14 @@ class TaskTestCase(TestCase):
         tasks_count = Task.objects.count()
         status = Status.objects.first()
 
-        response = self.client.post(reverse('task_create'), {
-            'name': 'Новая задача',
-            'description': 'Описание задачи',
-            'status': status.pk,
-        })
+        response = self.client.post(
+            reverse('task_create'),
+            {
+                'name': 'Новая задача',
+                'description': 'Описание задачи',
+                'status': status.pk,
+            }
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Task.objects.count(), tasks_count + 1)
         new_task = Task.objects.get(name='Новая задача')
@@ -321,9 +346,10 @@ class LabelTestCase(TestCase):
         self.client.force_login(self.user1)
         labels_count = Label.objects.count()
 
-        response = self.client.post(reverse('label_create'), {
-            'name': 'Новая метка',
-        })
+        response = self.client.post(
+            reverse('label_create'),
+            {'name': 'Новая метка'}
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Label.objects.count(), labels_count + 1)
 

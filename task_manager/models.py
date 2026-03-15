@@ -4,8 +4,15 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Status(models.Model):
-    name = models.CharField(max_length=200, unique=True, verbose_name=_('Name'))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created at'))
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name=_('Name')
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Created at')
+    )
 
     class Meta:
         verbose_name = _('Status')
@@ -17,8 +24,15 @@ class Status(models.Model):
 
 
 class Label(models.Model):
-    name = models.CharField(max_length=200, unique=True, verbose_name=_('Name'))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created at'))
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name=_('Name')
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Created at')
+    )
 
     class Meta:
         verbose_name = _('Label')
@@ -30,8 +44,15 @@ class Label(models.Model):
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=200, unique=True, verbose_name=_('Name'))
-    description = models.TextField(blank=True, verbose_name=_('Description'))
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+        verbose_name=_('Name')
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name=_('Description')
+    )
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
@@ -57,7 +78,10 @@ class Task(models.Model):
         related_name='tasks',
         verbose_name=_('Labels')
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created at'))
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Created at')
+    )
 
     class Meta:
         verbose_name = _('Task')

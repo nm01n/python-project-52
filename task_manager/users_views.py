@@ -1,18 +1,34 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+)
 from django.contrib.auth.models import User
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    ListView,
+    UpdateView,
+)
 
 
 class UserCreateForm(UserCreationForm):
-    first_name = forms.CharField(max_length=150, required=True, label=_('First name'))
-    last_name = forms.CharField(max_length=150, required=True, label=_('Last name'))
+    first_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label=_('First name')
+    )
+    last_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label=_('Last name')
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -26,8 +42,16 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserUpdateForm(UserCreationForm):
-    first_name = forms.CharField(max_length=150, required=True, label=_('First name'))
-    last_name = forms.CharField(max_length=150, required=True, label=_('Last name'))
+    first_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label=_('First name')
+    )
+    last_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label=_('Last name')
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -47,7 +71,10 @@ class UserListView(ListView):
     ordering = ["id"]
 
 
-class UserCreateView(SuccessMessageMixin, CreateView):
+class UserCreateView(
+    SuccessMessageMixin,
+    CreateView
+):
     model = User
     form_class = UserCreateForm
     template_name = "task_manager/users/create.html"
@@ -55,7 +82,12 @@ class UserCreateView(SuccessMessageMixin, CreateView):
     success_message = _("User successfully registered")
 
 
-class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class UserUpdateView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    SuccessMessageMixin,
+    UpdateView
+):
     model = User
     form_class = UserUpdateForm
     template_name = "task_manager/users/update.html"
@@ -74,7 +106,11 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
         return redirect("users_list")
 
 
-class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class UserDeleteView(
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    DeleteView
+):
     model = User
     template_name = "task_manager/users/delete.html"
     success_url = reverse_lazy("users_list")
@@ -91,5 +127,8 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect("users_list")
 
     def form_valid(self, form):
-        messages.success(self.request, _("User successfully deleted"))
+        messages.success(
+            self.request,
+            _("User successfully deleted")
+        )
         return super().form_valid(form)
