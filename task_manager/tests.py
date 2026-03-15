@@ -41,8 +41,7 @@ class UserTestCase(TestCase):
             print(
                 "Form errors:",
                 response.context['form'].errors
-                if 'form' in response.context
-                else 'No form'
+                if 'form' in response.context else 'No form'
             )
 
         self.assertEqual(response.status_code, 302)
@@ -56,6 +55,7 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         old_username = self.user1.username
+
         response = self.client.post(
             reverse('user_update', args=[self.user1.pk]),
             {
@@ -71,8 +71,7 @@ class UserTestCase(TestCase):
             print(
                 "Form errors:",
                 response.context['form'].errors
-                if 'form' in response.context
-                else 'No form'
+                if 'form' in response.context else 'No form'
             )
 
         self.assertEqual(response.status_code, 302)
@@ -92,14 +91,18 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         users_count = User.objects.count()
-        response = self.client.post(reverse('user_delete', args=[self.user1.pk]))
+        response = self.client.post(
+            reverse('user_delete', args=[self.user1.pk])
+        )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(User.objects.count(), users_count - 1)
 
     def test_user_delete_another_user(self):
         """Тест попытки удаления чужого профиля"""
         self.client.force_login(self.user1)
-        response = self.client.post(reverse('user_delete', args=[self.user2.pk]))
+        response = self.client.post(
+            reverse('user_delete', args=[self.user2.pk])
+        )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(User.objects.filter(pk=self.user2.pk).exists())
 
@@ -302,7 +305,7 @@ class TaskTestCase(TestCase):
 
         response = self.client.get(
             reverse('tasks_list'),
-            {'labels': label.pk}  # Изменено с 'label' на 'labels'
+            {'labels': label.pk}
         )
         self.assertEqual(response.status_code, 200)
         for task in response.context['filter'].qs:
