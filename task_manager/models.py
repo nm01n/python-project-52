@@ -30,7 +30,7 @@ class Label(models.Model):
 
 
 class Task(models.Model):
-    name = models.CharField(max_length=200, verbose_name=_('Name'))
+    name = models.CharField(max_length=200, unique=True, verbose_name=_('Name'))
     description = models.TextField(blank=True, verbose_name=_('Description'))
     status = models.ForeignKey(
         Status,
