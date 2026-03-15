@@ -70,9 +70,7 @@
             <td>{{ task.created_at|date:"d.m.Y H:i" }}</td>
             <td>
                 <a href="{% url 'task_update' task.id %}">{% trans "Update" %}</a>
-                {% if request.user == task.author %}
                 <a href="{% url 'task_delete' task.id %}">{% trans "Delete" %}</a>
-                {% endif %}
             </td>
         </tr>
         {% empty %}
