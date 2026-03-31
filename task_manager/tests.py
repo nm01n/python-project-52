@@ -54,14 +54,12 @@ class UserTestCase(TestCase):
         response = self.client.get(reverse('user_update', args=[self.user1.pk]))
         self.assertEqual(response.status_code, 200)
 
-        old_username = self.user1.username
-
         response = self.client.post(
             reverse('user_update', args=[self.user1.pk]),
             {
                 'first_name': 'Updated',
                 'last_name': 'Name',
-                'username': old_username,
+                'username': 'user1_updated',
                 'password1': 'newpass123!@#',
                 'password2': 'newpass123!@#',
             }
