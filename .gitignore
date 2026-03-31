@@ -32,3 +32,4 @@ Thumbs.db
 
 # uv
 .uv/
+*.egg-info/
